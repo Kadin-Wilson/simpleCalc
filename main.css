@@ -1,5 +1,5 @@
 body {
-    font-family: 'Courier New', monospace;
+    font-family: monospace;
     font-size: 100%;
     background-color: #A8DADC;
 }
@@ -43,6 +43,9 @@ body {
 .calculator button:focus {
     outline:none;
 }
+.calculator button:active {
+    border: 5px inset #31587A;
+}
 
 .calculator_display {
     grid-column: 1 / 5;
@@ -54,11 +57,11 @@ body {
     text-align: right;
 }
 
-.plus {
+.add {
     grid-column: 4 / 5;
     grid-row: 2 / 3;
 }
-.minus {
+.subtract {
     grid-column: 4 / 5;
     grid-row: 3 / 4;
 }
