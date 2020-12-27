@@ -1,18 +1,24 @@
 // class for the logical calculator
 class Calculator {
     constructor() {
-        this.display = "0"; // current display value
-        this.store = ""; // non displayed value
+        this.display = 0; // current display value
+        this.store = 0; // non displayed value
         this.last = ""; // last action taken
         this.func = ""; // function being performed
+        this.dec = false; // additional numbers are decimal
     }
     input_number(number) {
-        if (this.last != "number") {
-            this.display = number;
-            this.last = "number";
+        if (this.dec == false) {
+            if (this.last != "number") {
+                this.display = number;
+                this.last = "number";
+            }
+            else {
+                this.display = (this.display * 10) + number;
+            }
         }
         else {
-            this.display += number;
+            this.display = this.appendDecimal(this.display, number);
         }
     }
     add() {
@@ -48,33 +54,39 @@ class Calculator {
         }
     }
     dot() {
-        if (this.last == "number") 
-            this.display += ".";
-        else
-            this.display = "0.";
-
+        if (this.last != "number")
+            this.display = 0.;
+        this.dec = true;
         this.last = "number"
     }
     equal() {
         if (this.last == "number") {
             if (this.func == "add")
-                this.display = String(Number(this.store) + Number(this.display));
+                this.display = this.store + this.display;
             if (this.func == "subtract")
-                this.display = String(Number(this.store) - Number(this.display));
+                this.display = this.store - this.display;
             if (this.func == "multiply")
-                this.display = String(Number(this.store) * Number(this.display));
+                this.display = this.store * this.display;
             if (this.func == "divide")
-                this.display = String(Number(this.store) / Number(this.display));
+                this.display = this.store / this.display;
 
             this.last = "equal"
             this.func = "";
         }
+        this.dec = false;
     }
     // check if a function needs to be performed and do it
     check_compute() {
         if (this.last == "number" && this.function != "") {
             this.equal();
         }
+    }
+    // use string representation to append decimal digits
+    appendDecimal(num, digits) {
+        let stringNum = String(num);
+        if (!stringNum.includes("."))
+            stringNum += ".";
+        return Number(stringNum + digits);
     }
 }
 
@@ -93,7 +105,7 @@ for (let button of calc_div.querySelectorAll("button"))
 // then update the displayed calc's display
 function input(className, text) {
     if (className == "number")
-        calc.input_number(text);
+        calc.input_number(Number(text));
     if (className == "add")
         calc.add();
     if (className == "subtract")
@@ -107,8 +119,8 @@ function input(className, text) {
     if (className == "equal")
         calc.equal();
 
-    calc_div.querySelector(".calculator_display").innerText = resize(calc.display,
-                                                                     MAX_DIGITS);
+    let calc_text = resize(String(calc.display), MAX_DIGITS);
+    calc_div.querySelector(".calculator_display").innerText = calc_text;
 }
 
 // resize number text to given size
