@@ -82,6 +82,8 @@ class Calculator {
 let calc = new Calculator();
 // actual displayed calculator
 let calc_div = document.querySelector(".calculator");
+// max digits for the calculator display
+const MAX_DIGITS = 12;
 // hook up the buttons
 for (let button of calc_div.querySelectorAll("button"))
     button.addEventListener("click", (e) => input(e.target.className, 
@@ -105,6 +107,16 @@ function input(className, text) {
     if (className == "equal")
         calc.equal();
 
-    calc_div.querySelector(".calculator_display").innerText = calc.display;
+    calc_div.querySelector(".calculator_display").innerText = resize(calc.display,
+                                                                     MAX_DIGITS);
 }
 
+// resize number text to given size
+function resize(text, size) {
+    if (text.length > size) {
+        let num = Number(text).toPrecision(size - 4); // 4 is space for e+x
+        return String(num);
+    }
+
+    return text;
+}
